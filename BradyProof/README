@@ -1,0 +1,14 @@
+--cumulant_base.py contains all relevant functions
+--basic_proof.py can be run to show that all higher order terms
+	disapper (analagous to eqn. 18 in the current version of the manuscript)
+-- the relevant output of basic_proof.py is the "COMBINED i" lines, which 
+	give all the remaining cumulants of order i.  These cumulants
+	are given in a code form that is described in cumulant_base.py. 
+	A blank line means all cumulants of that order have been 
+	cancelled.  Run basic_proof.py as-is to see the proof up
+	to order 4. 
+
+
+
+
+

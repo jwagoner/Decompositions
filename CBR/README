@@ -1,0 +1,16 @@
+--numericalCumulants.py contains code that should be useful for a 
+	number of numerical tests
+--cbr.py is my test of CBR
+
+--cbr.py is a bit of a mess, but the best way to get a hold on what's
+	happening is to look at getCBRenergies() and play around
+	with the mu/sigma arrays for the two states.  
+--in main() of cbr.py, there are two output lines starting with "C4"
+	and "C2".  These output comparisons of \Delta \Delta A
+	and \Delta A^* for the two components 
+--Based on all relevant complications of CBR, it's possible that
+	this numerical test is useless and doesn't capture the
+	reality of a binding process.  There are many variables to be 
+	considered
+
+
