@@ -3,4 +3,6 @@
 *.blg
 *.log
 Decompositions.v2.pdf
+*.gz
+.DS_Store
 

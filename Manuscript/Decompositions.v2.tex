@@ -6,17 +6,6 @@
 \usepackage{graphicx}% Include figure files
 \usepackage{dcolumn}% Align table columns on decimal point
 \usepackage{bm}% bold math
-%\usepackage{hyperref}% add hypertext capabilities
-%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
-%\linenumbers\relax % Commence numbering lines
-
-%\usepackage[showframe,%Uncomment any one of the following lines to test 
-%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
-%%text={7in,10in},centering,
-%%margin=1.5in,
-%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
-%%height=10in,a5paper,hmargin={3cm,0.8in},
-%]{geometry}
 \usepackage{verbatim}
 \usepackage{color}
 
@@ -43,20 +32,26 @@ date{ \today}
 \maketitle
 
 \section{Introduction}
-We are interested in decomposing a single free energy calculation into meaningful contributions from various components of  the Hamiltonian.  This proves difficult--though the total free energy $\Delta A$ is a state function, any decomposition is formally path dependent for any non-trivial case.  For this reason, the path must be constructed to correspond to free energy components that are relevant to our analyses of interest.  Consider the case of protein-protein binding with contributions from $N$ total residues, labeled $i\in \left[ 1, \dots, N\right]$, that participate in binding.  If we are interested in making single mutations that shift the binding equilibrium, we would prefer to know $\Delta \Delta A_i$ for every residue, 
+
+We are interested in decomposing a single free energy calculation into meaningful contributions from various components of  the Hamiltonian.  This proves difficult---though the total free energy $\Delta A$ is a state function, any decomposition is formally path dependent for any non-trivial case.  For this reason, the path must be constructed to correspond to free energy components that are relevant to our analyses of interest.
+
+Consider the case of protein-protein binding with contributions from $N$ total residues, labeled $i\in \left[ 1, \dots, N\right]$, that participate in binding.  If we are interested in making single mutations that shift the binding equilibrium, we would prefer to know $\Delta \Delta A_i$ for every residue, 
 the difference in free energy of the binding process with and without residue \textit{i} mutated.   This proves to be tedious, as $N$ free energy calculations (or analogous experiments) are required.   \warning{ ala-scanning}.  
 
-Despite the trouble with path-dependence, multiple free energy components are often appropriated from a single calculation.  Examples include... \warning{ROSETTA, many others}.  These methods often disregard entropic or coupling effects, and the connection of the calculated components to formal free energies (such as the $\Delta \Delta A_i$'s described above) is unclear.  
+Despite the trouble with path-dependence, multiple free energy components are often appropriated from a single calculation.  Examples include... \warning{ROSETTA, many others}.  The advantage of these methods is that per-residue quantities can be obtained from a single calculation. However, these methods often disregard entropic or coupling effects, and the connection of the calculated components to formal free energies (such as the $\Delta \Delta A_i$'s described above) is unclear.  
+
+\warning{Our main contributions are\dots}
 
 We derive a formalism in which meaningful free energy components $\Delta A^*_i$ can be calculated from a single calculation and related to the exact free energy of changing a single Hamiltonian component (such as the $\Delta \Delta A_i$ described above).  The quantities $\Delta A^*_i$ are characterized using a cumulant expansion of the free energy taken about the state of interest.  As shown by Brady \emph{et. al} \cite{Brady:1996gm}, this decomposition can be used to give \warning{sensical} splitting of the cumulants among the components \textit{i} when the free energy calculation parameter is performed using 1/\emph{kT} as the coupling parameter and $T=\infty$ is taken as the reference state.  Here, we define a broader set of constraints to be used with free energy calculations that still produce meaningful $\Delta A^*_i$ components.  We write out the form of $\Delta A^*_i$ using these cumulant expansions, then relate these quantities back to the exact free energy components (e.g., $\Delta \Delta A_i$) of interest.  
 
 \warning{mention the radius of convergence and limitations.  Even when not quantitatively valid, this gives good intuition}
 
+\warning{introduce dual (covar, cumulant) approaches\dots}
 
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%
 \section{Cumulant decomposition of free energies}
 \label{S:CumulantGeneral}
 
@@ -72,12 +67,13 @@ and
 $
 H_T(\vec{x},1) = H_0(\vec{x}) + H_1(\vec{x}) + H_2(\vec{x}).
 $
-We call $H_0$ a \emph{spectator} component, since it is present in both the reference and final states, and $H_1$ and $H_2$ \emph{scaled} components.  This is a minimal example that contains the necessary complexity of the problem at hand. 
+We call $H_0$ a \emph{spectator} component, since it is present in both the reference and final states, and $H_1$ and $H_2$ \emph{scaled} components.  This is a minimal example that contains the necessary complexity of the problem at hand.
+ 
 The configurational partition function in the canonical ensemble is
 \begin{equation}
 Z(\lambda) = \int_{\Omega} d\vec{x} \: \mbox{exp} \left[  - \beta H_T (\vec{x},\lambda) \right]
 \end{equation} 
-where $\beta = \frac{1}{kT}$ is the inverse thermal energy and $\Omega$ defines the relevant domain.  An absolute free energy (or a free energy relative to the ideal state) can be defined as
+where $\beta = \frac{1}{k_BT}$ is the inverse thermal energy and $\Omega$ defines the relevant domain.  An absolute free energy (or a free energy relative to the ideal state) can be defined as
 \begin{eqnarray}
 \beta A (\lambda) & = & \mbox{ln} \left[ \frac{\int_{\Omega} d\vec{x}}
 { \int_{\Omega} d\vec{x} \: \mbox{exp} \left[  - \beta H_T (\vec{x},\lambda) \right]}  \right] \\
@@ -122,7 +118,11 @@ A (\lambda) &=& \sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} \langle  H_T^n \rang
 \label{e:CumulantTot}
 \end{eqnarray}
 where the subscript \emph{c} denotes a cumulant of order \emph{n} and we have dropped the arguments of the Hamiltonian for the sake of notation.  $ \sum_{k_0+k_1+k_2=n} $ is the integer partition of \emph{n} and 
-${ n \choose k_0,k_1,k_2 }$ is the multinomial coefficient. The first three cumulants are equivalent to the central moments, though this relationship does not hold for higher orders.  There is no simple way to find the higher order terms and a general expression for cumulants in terms of the underlying moments involves an additional sum over integer partitions.\cite{NULL}  The radius of convergence for the second Taylor expansion limits the convergence of this expression to the cases  
+${ n \choose k_0,k_1,k_2 }$ is the multinomial coefficient.
+
+The first three cumulants are equivalent to the central moments, though this relationship does not hold for higher orders.  There is no simple way to find the higher order terms and a general expression for cumulants in terms of the underlying moments involves an additional sum over integer partitions.\cite{NULL}
+
+The radius of convergence for the second Taylor expansion limits the convergence of this expression to the cases  
 $
 \langle \mbox{exp} \left[ \beta H_T  \right]  \rangle_{\lambda} < 2,
 $
@@ -144,8 +144,9 @@ This equation leaves a natural decomposition of the free energy into individual 
 \label{e:TIcomps}
 \end{equation}
  
- Though $\Delta A^*_1  (\lambda)+ \Delta A^*_2  (\lambda)= \Delta A (\lambda)$, the individual components are path-dependent and it is unclear (1) how useful they are as individual quantities, and (2) what the integral of an individual component actually produces (outside of the limiting case in which components 1 and 2 are switched on independently, one after the other).  Motivated by the work of Brady \emph{et. al.},\cite{NULL}, we show that 
- this decomposition is indeed meaningful when the components are switched on simultaneously under certain constraints for the path taken by $\lambda$.  We begin by postulating that these free energy components take on the form
+Though $\Delta A^*_1  (\lambda)+ \Delta A^*_2  (\lambda)= \Delta A (\lambda)$, the individual components are path-dependent and it is unclear (1) how useful they are as individual quantities, and (2) what the integral of an individual component actually produces (outside of the limiting case in which components 1 and 2 are switched on independently, one after the other).  Motivated by the work of Brady \emph{et. al.},\cite{NULL}, we show that this decomposition is indeed meaningful when the components are switched on simultaneously under certain constraints for the path taken by $\lambda$.
+
+We begin by postulating that these free energy components take on the form:
  \begin{equation}
 \Delta A^*_i  (\lambda)=
 \sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
@@ -188,6 +189,7 @@ a^i_{001}  \left\langle \frac{dH_2}{d \lambda} \right \rangle_{\lambda}
      \right] \nonumber \\ & & 
       + \mathcal{O} (n^3). \nonumber
 \end{eqnarray}
+
 We note that there is a useful combination of terms if the scaling of $\lambda$ is \emph{separable} and \emph{equivalent} for the Hamiltonian components.  That is, $H_i \left( \vec{x}, \lambda \right) = f(\lambda) H_i \left( \vec{x}\right) $
 for $i \in \{1,2\}$.  The conditions of separability and equivalence constrain the paths for these calculations.  Under these conditions, it is readily seen that 
 \begin{equation}
@@ -199,6 +201,7 @@ Inserting equation \ref{e:BradyCoeffs} into equation \ref{e:Aderv}, we arrive at
 \frac{d \Delta A^*_i}{d \lambda} =   \left\langle \frac{dH_i}{d \lambda} \right \rangle_{\lambda} + \mathcal{O} (n^3). 
 \label{e:BradyProof}
 \end{equation}
+
 Because of the general clunkiness of cumulant expansions in terms of integer partitions, there is no straightforward way to prove the above result to all orders.  However, we have used symbolic manipulation to demonstrate that equation \ref{e:BradyCoeffs} holds to order 7, such that
 \begin{equation}
 \frac{d \Delta A^*_i}{d \lambda} =   \left\langle \frac{dH_i}{d \lambda} \right \rangle_{\lambda} + \mathcal{O} (n^8). 
@@ -206,8 +209,8 @@ Because of the general clunkiness of cumulant expansions in terms of integer par
 \end{equation}
 \warning{Will bump this to 10}
 The error term here is simply where we cut off our analyses, we expect that this relationship holds exactly for all cumulant orders.  
-Equation \ref{e:BradyCoeffs} and the conditions of equivalence and separability for the alchemical path are the central result of this work.  
- The resulting components $\Delta A^*_i$ split the cumulants in a \warning{sensical} manner.  For example, $\Delta A^*_1$ contains $1/2$ of all $\langle  H_1 H_2\rangle_{\lambda,c}$ terms, $2/3$ of all $\langle  H_1^2 H_2\rangle_{\lambda,c}$ terms, etc. 
+
+Equation \ref{e:BradyCoeffs} and the conditions of equivalence and separability for the alchemical path are one of the central results of this work. The resulting components $\Delta A^*_i$ split the cumulants in a \warning{sensical} manner.  For example, $\Delta A^*_1$ contains $1/2$ of all $\langle  H_1 H_2\rangle_{\lambda,c}$ terms, $2/3$ of all $\langle  H_1^2 H_2\rangle_{\lambda,c}$ terms, etc. 
 
 Note that all cumulant terms containing a power of $H_0$ disappear from each free energy component, and therefore 
 the total free energy $\Delta A (\lambda) $ contains only a cumulant expansion of $H_1$ and $H_2$ taken at the state $\lambda$. 
@@ -224,9 +227,59 @@ This is an intriguing result, and states that any change in a spectator componen
 \end{equation}
 where $\delta_{0,k_0} $ is the Kronecker delta function and $ \left( 1- \delta_{0,k_0}  \right)$ picks out all cumulants with non-zero instances of $H_0$. 
 
-The results presented in Brady \emph{et. al.}\cite{Brady:1996gm} are a special case of the above analyses.  In that work, there are no spectator components (the $\beta=0$, or non-interacting, state is taken as reference) and the Hamiltonian components scale linearly in $\beta$.  Thus, their results were only postulated to be valid for free energy calculations scaled linearly from the infinite-temperature regime.  In addition, only a  few of the coefficients (equation \ref{e:BradyCoeffs}) were shown using algebraic manipulation and a general result was not provided.  We have provided a general solution for these coefficients, and we have loosened the constraints and demonstrated that the above decomposition is valid for a much broader class of alchemical paths.  
+The results presented in Brady \emph{et. al.}\cite{Brady:1996gm} are a special case of the above analyses.  In that work, there are no spectator components (the $\beta=0$, or non-interacting, state is taken as reference) and the Hamiltonian components scale linearly in $\beta$.  Thus, their results were only postulated to be valid for free energy calculations scaled linearly from the infinite-temperature regime.  In addition, only a  few of the coefficients (equation \ref{e:BradyCoeffs}) were shown using algebraic manipulation and a general result was not provided.  We have provided a general solution for these coefficients, and we have loosened the constraints and demonstrated that the above decomposition is valid for a much broader class of alchemical paths.
 
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 
+\section{An alternative perspective}
+
+By evaluating $\frac{d}{d\lambda}\left<H_T\right>$ and rearranging, we can show:
+\begin{equation}
+\left<\frac{dH_T}{d\lambda}\right>_\lambda = 
+\frac{d}{d\lambda}\left<H_T\right>_\lambda +
+\beta \mathrm{Cov}\left(H_T, \frac{dH_T}{d\lambda} \right)_\lambda,
+\end{equation}
+where the subscript $\lambda$ indicates that averages or covariances are taken from the ensemble with a specified value of $\lambda$.
+
+The first term on the left is obviously the $\lambda$-derivative of the enthalpy and will give the enthalpy when integrated: $\Delta H_T = \left<H_T\right>_{\lambda=1} - \left<H_T\right>_{\lambda=0}$. The covariance term is the derivative of the entropy. When integrated, this will yield $-T\Delta S_T$, which is path independent.
+
+A similar analysis can be performed on each component, yielding:
+\begin{eqnarray}
+\left<\frac{dH_0}{d\lambda}\right>_\lambda &=& 
+\frac{d}{d\lambda}\left<H_0\right>_\lambda +
+\beta\mathrm{Cov}\left(H_0, \frac{dH_1}{d\lambda} \right)_\lambda+
+\beta\mathrm{Cov}\left(H_0, \frac{dH_2}{d\lambda} \right)_\lambda \label{eq:H0_cov}=0\\
+\left<\frac{dH_1}{d\lambda}\right>_\lambda &=& 
+\frac{d}{d\lambda}\left<H_1\right>_\lambda +
+\beta\mathrm{Cov}\left(H_1, \frac{dH_1}{d\lambda} \right)_\lambda+
+\beta\mathrm{Cov}\left(H_1, \frac{dH_2}{d\lambda} \right)_\lambda\\
+\left<\frac{dH_2}{d\lambda}\right>_\lambda &=& 
+\frac{d}{d\lambda}\left<H_2\right>_\lambda +
+\beta\mathrm{Cov}\left(H_2, \frac{dH_1}{d\lambda} \right)_\lambda+
+\beta\mathrm{Cov}\left(H_2, \frac{dH_2}{d\lambda} \right)_\lambda.
+\end{eqnarray}
+We note that Eq.~\ref{eq:H0_cov} must be equal to zero because $H_0$ has no $\lambda$-dependence. As with the cumulant expressions, this implies the intriguing result that all changes to $H_0$ due to the perturbation are compensated by couplings with $H_1$ and $H_2$.
+
+The enthalpy terms in each expression are obviously path-independent, as they are integrals of derivatives of state functions. The entropic components will, in general, be path dependent.
+
+In the case of separable and equivalent scalings, where $H_i = f(\lambda)H_i$, we have:
+\begin{eqnarray}
+\left<\frac{dH_1}{d\lambda}\right>_\lambda &=& 
+\frac{d}{d\lambda}\left<H_1\right>_\lambda +
+f(\lambda)f'(\lambda)\beta\mathrm{Cov}\left(H_1,H_1\right)_\lambda+
+\underline{f(\lambda)f'(\lambda)\beta\mathrm{Cov}\left(H_1,H_2\right)_\lambda}\\
+\left<\frac{dH_2}{d\lambda}\right>_\lambda &=& 
+\frac{d}{d\lambda}\left<H_2\right>_\lambda +
+\underline{f(\lambda)f'(\lambda)\beta\mathrm{Cov}\left(H_2,H_1 \right)_\lambda}+
+f(\lambda)f'(\lambda)\beta\mathrm{Cov}\left(H_2,H_2 \right)_\lambda,
+\end{eqnarray}
+where the underlined terms are identical.
+
+These results demonstrate that separable, equivalent scaling: (1) results in a path-independent splitting of the enthalpy terms; (2) assigns the entropic component due solely to fluctuations in individual Hamiltonian terms to the corresponding free energy component; and (3) evenly splits the entropic coupling terms between the corresponding free energies.
+
+\warning{section summarizing and relating results for cumulants and covariances}
 
 %%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%
@@ -234,15 +287,25 @@ The results presented in Brady \emph{et. al.}\cite{Brady:1996gm} are a special c
 \section{Applications}
 \warning{CBR, CCR, real paths for protein-protein binding, double mutant experiments}
 
-
-
 %%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%
 \subsection{Confine, bind, and release (CBR)}
-The confine-bind-release (CBR) method.\cite{NULL}  We assume a reference system in which a receptor (of \emph{N} residues) is immersed in solvent.  In this reference state, a ligand is bound to a binding pocket with a set of restraints, though the ligand is non-interacting with the solvent and receptor.  In the final state, the interactions between the ligand and the solvent and receptor are turned on.  We will decompose all interactions involving the receptor into two terms: $R_0$, corresponding to \emph{N-1} residues, and $R_1$, the \emph{N}-th residue of interest.  Thus, our Hamilonian is 
-$H_T (\vec{x},\vec{\lambda}) = H_{R_0-S}(\vec{x},\lambda_0)+H_{R_1-S}(\vec{x,\lambda_1})+H_{L-S}(\vec{x,\lambda_2})
-+ H_{R_0-L}(\vec{x},\lambda_3)+H_{R_1-L}(\vec{x},\lambda_4)$, where $\vec{\lambda}$ is the vector of $\lambda$-values for all five components. 
+
+The confine-bind-release (CBR) method.\cite{NULL}  We assume a reference system in which a receptor (of \emph{N} residues) is immersed in solvent. In this reference state, a ligand is bound to a binding pocket with a set of restraints, though the ligand is non-interacting with the solvent and receptor. In the final state, the interactions between the ligand and the solvent and receptor are turned on.
+
+We will decompose all interactions involving the receptor into two regions: $R_0$, corresponding to \emph{N-1} residues, and $R_1$, the \emph{N}-th residue of interest. Our Hamiltonian is composed of ten terms:
+\begin{equation}
+H_T = 
+H_0 + H_S + H_{0S} + 
+\lambda_1H_1 + \lambda_1H_{01} + \lambda_1H_{1S} +
+\lambda_1f(\lambda_L)H_{1L} + f(\lambda_L)H_{0L} +
+f(\lambda_L)H_{LS} + f(\lambda_L)H_L,
+\end{equation}
+where $\lambda_1$ turns the interactions involving $R_1$ and $f(\lambda_L)$ is a scaling protocol that turns on the interactions of the ligand with the rest of the system.
+
+\warning{Jason, can you update the expressions below to account for all then terms?}
+
 The free energy of binding is 
 $\Delta A_{bind} = A\left(\vec{\lambda}=\left[1,1,1,1,1\right] \right) - 
 A\left( \vec{\lambda} = \left[ 1,1,0,0,0 \right]   \right)$. 
@@ -356,9 +419,32 @@ Inserting equation \ref{e:DDGspectators} into equations \ref{e:BradyDecomp:CBR} 
  be trivially decomposable.  The error terms leave us with a fractional entropic contribution that corresponds to the coupling of component $R_1$ to other Hamiltonian components.
  
  This analysis can be used to guide mutation studies.  If we perform a single ligand binding free energy calculation, we can extract a free energy component for each residue involved in binding via equation \ref{e:BradyDecomp:CBR}.  If these quantities are used to predict where mutations might have the largest effect, the error between our prediction and the true $\Delta \Delta A$ is given by equation \ref{e:DDG-DGbrady}.  
- 
- 
- \subsubsection{Numerical Results}
+
+\warning{we need to think a bit about the structure of the practical parts. I'm just dumping the covariance based results here for now.}
+
+We can also analyze the errors in terms of the derivative expressions derived previously. We wish to understand the error $\Delta$ between the difference in binding free energies with and without $R_1$ and the approximate per-residue component free energy $\Delta A^*_{R_1}$:
+\begin{equation}
+\Delta =
+\int_0^1 d\lambda_L
+\left[
+\left<\frac{dH_{1L}}{d\lambda_L}\right>_{\lambda_L}^{\lambda_1=1} - 
+\left<\frac{dH_{T}}{d\lambda_L}\right>_{\lambda_L}^{\lambda_1=1} +
+\left<\frac{dH_{T}}{d\lambda_L}\right>_{\lambda_L}^{\lambda_1=0} 
+\right].
+\end{equation}
+Dropping the integration, expanding $H_T$, and simplifying, we find:
+\begin{equation}
+\frac{d\Delta}{d\lambda_L} =
+f'(\lambda_L)
+\left[
+\left(\left< H_L \right>_{\lambda_L}^{\lambda_1=1} - \left< H_L \right>_{\lambda_L}^{\lambda_1=0} \right) +
+\left(\left< H_{0L} \right>_{\lambda_L}^{\lambda_1=1} - \left< H_{0L} \right>_{\lambda_L}^{\lambda_1=0} \right) +
+\left(\left< H_{LS} \right>_{\lambda_L}^{\lambda_1=1} - \left< H_{LS} \right>_{\lambda_L}^{\lambda_1=0} \right)
+\right].
+\end{equation}
+This expression tells us that the error is related to how strongly the enthalpy terms involving the ligand are coupled to $R_1$. When this coupling is small, then the error will be small. Conversely, if there is strong coupling (e.g. $R_1$ induces a conformational change in the ligand that is not present when $R_1$ is absent), then the error will be large.
+
+\subsubsection{Numerical Results}
  A few troubling issues
  \begin{itemize}
  \item We can see from equations \ref{e:TIcomps} that $\Delta A^*_{R_1}$ is going to track with the enthalpy.  Imagine the case in which the enthalpic contribution ($H_{R_1-L}$) is favorable.  In this case,  $\Delta A^*_{R_1} < 0$ always.  But there are many cases in which $\Delta \Delta A_{R_1}$ is unfavorable, either because there is a large, unfavorable entropic contribution or because $H_{R_1-L} > H_{R_1-S}$.
