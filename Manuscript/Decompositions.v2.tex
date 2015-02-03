@@ -1,0 +1,570 @@
+\documentclass[%
+ preprint,
+ amsmath,amssymb,
+ aps,
+]{revtex4-1}
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+%\usepackage{hyperref}% add hypertext capabilities
+%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
+%\linenumbers\relax % Commence numbering lines
+
+%\usepackage[showframe,%Uncomment any one of the following lines to test 
+%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
+%%text={7in,10in},centering,
+%%margin=1.5in,
+%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
+%%height=10in,a5paper,hmargin={3cm,0.8in},
+%]{geometry}
+\usepackage{verbatim}
+\usepackage{color}
+
+
+
+\newcommand{\warning}[1]{{\textsf{{\textcolor{red}{{[#1]}{}}}}}}
+\renewcommand{\vec}[1]{{\mathbf{#1}}}
+
+
+\begin{document}
+
+\title{Free energy decompositions can provide a useful proxy for mutation studies}
+\author{Jason A. Wagoner}
+\author{Justin L. MacCallum}
+\author{Ken A. Dill}
+
+date{ \today}
+
+
+\begin{abstract}
+
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+We are interested in decomposing a single free energy calculation into meaningful contributions from various components of  the Hamiltonian.  This proves difficult--though the total free energy $\Delta A$ is a state function, any decomposition is formally path dependent for any non-trivial case.  For this reason, the path must be constructed to correspond to free energy components that are relevant to our analyses of interest.  Consider the case of protein-protein binding with contributions from $N$ total residues, labeled $i\in \left[ 1, \dots, N\right]$, that participate in binding.  If we are interested in making single mutations that shift the binding equilibrium, we would prefer to know $\Delta \Delta A_i$ for every residue, 
+the difference in free energy of the binding process with and without residue \textit{i} mutated.   This proves to be tedious, as $N$ free energy calculations (or analogous experiments) are required.   \warning{ ala-scanning}.  
+
+Despite the trouble with path-dependence, multiple free energy components are often appropriated from a single calculation.  Examples include... \warning{ROSETTA, many others}.  These methods often disregard entropic or coupling effects, and the connection of the calculated components to formal free energies (such as the $\Delta \Delta A_i$'s described above) is unclear.  
+
+We derive a formalism in which meaningful free energy components $\Delta A^*_i$ can be calculated from a single calculation and related to the exact free energy of changing a single Hamiltonian component (such as the $\Delta \Delta A_i$ described above).  The quantities $\Delta A^*_i$ are characterized using a cumulant expansion of the free energy taken about the state of interest.  As shown by Brady \emph{et. al} \cite{Brady:1996gm}, this decomposition can be used to give \warning{sensical} splitting of the cumulants among the components \textit{i} when the free energy calculation parameter is performed using 1/\emph{kT} as the coupling parameter and $T=\infty$ is taken as the reference state.  Here, we define a broader set of constraints to be used with free energy calculations that still produce meaningful $\Delta A^*_i$ components.  We write out the form of $\Delta A^*_i$ using these cumulant expansions, then relate these quantities back to the exact free energy components (e.g., $\Delta \Delta A_i$) of interest.  
+
+\warning{mention the radius of convergence and limitations.  Even when not quantitatively valid, this gives good intuition}
+
+
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\section{Cumulant decomposition of free energies}
+\label{S:CumulantGeneral}
+
+Consider a system described by phase variable $\vec{x}$ and Hamiltonian with three components,
+\begin{equation}
+H_T(\vec{x},\lambda) = H_0(\vec{x}) + H_1(\vec{x},\lambda) + H_2(\vec{x},\lambda),
+\end{equation}
+where $\lambda \in [ 0, 1] $ is an alchemical parameter that scales the last two components such that 
+$
+H_T(\vec{x},0) = H_0 (\vec{x})
+$
+and 
+$
+H_T(\vec{x},1) = H_0(\vec{x}) + H_1(\vec{x}) + H_2(\vec{x}).
+$
+We call $H_0$ a \emph{spectator} component, since it is present in both the reference and final states, and $H_1$ and $H_2$ \emph{scaled} components.  This is a minimal example that contains the necessary complexity of the problem at hand. 
+The configurational partition function in the canonical ensemble is
+\begin{equation}
+Z(\lambda) = \int_{\Omega} d\vec{x} \: \mbox{exp} \left[  - \beta H_T (\vec{x},\lambda) \right]
+\end{equation} 
+where $\beta = \frac{1}{kT}$ is the inverse thermal energy and $\Omega$ defines the relevant domain.  An absolute free energy (or a free energy relative to the ideal state) can be defined as
+\begin{eqnarray}
+\beta A (\lambda) & = & \mbox{ln} \left[ \frac{\int_{\Omega} d\vec{x}}
+{ \int_{\Omega} d\vec{x} \: \mbox{exp} \left[  - \beta H_T (\vec{x},\lambda) \right]}  \right] \\
+& = &
+\mbox{ln} \left[ \frac{\int_{\Omega} d\vec{x}  \mbox{exp} \left[  - \beta H_T (\vec{x},\lambda) \right] 
+ \mbox{exp} \left[  H_T (\vec{x},\lambda) \right]}
+{ \int_{\Omega} d\vec{x} \: \mbox{exp} \left[  -\beta H_T (\vec{x},\lambda) \right]}  \right] \\
+& = & \mbox{ln} \left \langle  \mbox{exp} \left[ \beta H_T (\vec{x},\lambda) \right]
+\right \rangle_{\lambda}
+\label{e:Zwanzig}
+\end{eqnarray}
+where $\langle \cdots \rangle_{\lambda}$ denotes an average taken over the ensemble at state $\lambda$.  This is the
+Zwanzig relation, albeit in a slightly unusual form, as the perturbation moves toward the non-interacting state 
+taken with respect to the reference at state $\lambda$. 
+
+Expanding the exponential term around $\beta=0$ relates this term to the series of moments,
+\begin{equation}
+ \langle \mbox{exp} \left[ \beta H_T (\vec{x},\lambda) \right]  \rangle_{\lambda} = 
+ 1+\sum_{n=1}^{\infty}  \frac{\beta^n}{n!} \langle  H_T (\vec{x},\lambda)^n \rangle_{\lambda}.
+\label{e:Taylor1}
+\end{equation}
+Inserting this term into the logarithm of equation \ref{e:Zwanzig} and Taylor expanding again results in the cumulant 
+expression:
+\begin{eqnarray}
+A (\lambda) &=& \sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} \langle  H_T^n \rangle_{\lambda,c} \\
+& = &
+\sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!}  \sum_{k_0+k_1+k_2=n} 
+{ n \choose k_0,k_1,k_2 } \langle  H_0^{k_0} H_1^{k_1} H_2^{k_2} \rangle_{\lambda,c} \\
+& = &
+\langle  H_0 \rangle_{\lambda}  + \langle  H_1 \rangle_{\lambda} + \langle  H_2 \rangle_{\lambda}  
++ \frac{\beta}{2} \left[  \langle  H_0^2 \rangle_{\lambda} -\langle  H_0 \rangle^2_{\lambda}  +
+\langle  H_1^2 \rangle_{\lambda} -\langle  H_1 \rangle^2_{\lambda}  
+ + \langle  H_2^2 \rangle_{\lambda} -\langle  H_2 \rangle^2_{\lambda}   \right] 
+\\ 
+ & & 
+ + \beta \left[ \langle  H_0 H_1\rangle_{\lambda} -\langle  H_0 \rangle_{\lambda} \langle  H_1 \rangle_{\lambda} 
+ +\langle  H_0 H_2\rangle_{\lambda} -\langle  H_0 \rangle_{\lambda} \langle  H_2 \rangle_{\lambda} 
+ +\langle  H_1 H_2\rangle_{\lambda} -\langle  H_1 \rangle_{\lambda} \langle  H_2 \rangle_{\lambda} 
+   \right]
+  \\ & & 
+ + \mathcal{O} (n^3)
+\label{e:CumulantTot}
+\end{eqnarray}
+where the subscript \emph{c} denotes a cumulant of order \emph{n} and we have dropped the arguments of the Hamiltonian for the sake of notation.  $ \sum_{k_0+k_1+k_2=n} $ is the integer partition of \emph{n} and 
+${ n \choose k_0,k_1,k_2 }$ is the multinomial coefficient. The first three cumulants are equivalent to the central moments, though this relationship does not hold for higher orders.  There is no simple way to find the higher order terms and a general expression for cumulants in terms of the underlying moments involves an additional sum over integer partitions.\cite{NULL}  The radius of convergence for the second Taylor expansion limits the convergence of this expression to the cases  
+$
+\langle \mbox{exp} \left[ \beta H_T  \right]  \rangle_{\lambda} < 2,
+$
+or 
+$
+A (\lambda) < \frac{1}{\beta}\mbox{ln} (2)
+$.  However, for Gaussian distributions of the Hamiltonian components, the above expression is exact with all terms $n>2$ disappearing, easily shown with integration of a Gaussian functional. 
+
+We can obtain the free energy difference taken with respect to the $\lambda=0$ state using thermodynamic integration\cite{NULL}
+\begin{equation}
+\Delta A (\lambda)= A(\lambda)-A(\lambda=0)  = \int_0^{\lambda} d \lambda'
+\left\langle \frac{dH_1}{d \lambda'} +  \frac{dH_2}{d \lambda'}  \right \rangle_{\lambda'}.
+\label{e:TI}
+\end{equation}
+This equation leaves a natural decomposition of the free energy into individual components
+\begin{equation}
+\Delta A^*_i  (\lambda) = \int_0^{\lambda} d \lambda' 
+\left\langle \frac{dH_i}{d \lambda'} \right \rangle_{\lambda'}, i \in \{ 1,2 \}.
+\label{e:TIcomps}
+\end{equation}
+ 
+ Though $\Delta A^*_1  (\lambda)+ \Delta A^*_2  (\lambda)= \Delta A (\lambda)$, the individual components are path-dependent and it is unclear (1) how useful they are as individual quantities, and (2) what the integral of an individual component actually produces (outside of the limiting case in which components 1 and 2 are switched on independently, one after the other).  Motivated by the work of Brady \emph{et. al.},\cite{NULL}, we show that 
+ this decomposition is indeed meaningful when the components are switched on simultaneously under certain constraints for the path taken by $\lambda$.  We begin by postulating that these free energy components take on the form
+ \begin{equation}
+\Delta A^*_i  (\lambda)=
+\sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2=n} 
+{ n \choose k_0,k_1,k_2 } a^i_{k_0k_1k_2} \langle  H_0^{k_0} H_1^{k_1} H_2^{k_2} \rangle_{\lambda,c}
+\right)
+- a^i_{n00} \langle  H_0^{n}  \rangle_{\lambda=0,c}
+\right],
+\label{e:BradyDecomp1}
+\end{equation}
+where the coefficients $ a^i_{k_0k_1k_2}  $ dictate the `splitting' of the cumulants among the free energy components, 
+$\sum_i a^i_{k_0k_1k_2} = 1$. 
+We can solve for these coefficients by taking the derivative of equation \ref{e:BradyDecomp1} with respect to $\lambda$ and relating the result back to equation \ref{e:TIcomps}.  For example, to second order: 
+\begin{eqnarray}
+\frac{d \Delta A^*_i}{d \lambda} &=&
+a^i_{010}  \left\langle \frac{dH_1}{d \lambda} \right \rangle_{\lambda} + 
+a^i_{001}  \left\langle \frac{dH_2}{d \lambda} \right \rangle_{\lambda} 
+\label{e:Aderv} \\ & & 
+ -\beta \left[ a^i_{100} \langle  H_0 \frac{dH_1}{d \lambda}  \rangle_{\lambda} -a^i_{100} \langle  H_0 \rangle_{\lambda}  \langle \frac{dH_1}{d \lambda} \rangle_{\lambda} 
+    + a^i_{100} \langle  H_0 \frac{dH_2}{d \lambda}  \rangle_{\lambda} -a^i_{100} \langle  H_0 \rangle_{\lambda}  \langle \frac{dH_2}{d \lambda} \rangle_{\lambda} 
+    \right.  \nonumber  \\ & & \qquad \left. 
+ +a^i_{010} \langle  H_1 \frac{dH_1}{d \lambda}  \rangle_{\lambda} -a^i_{010} \langle  H_1 \rangle_{\lambda}  \langle \frac{dH_1}{d \lambda} \rangle_{\lambda} 
+  +a^i_{010} \langle  H_1 \frac{dH_2}{d \lambda}  \rangle_{\lambda} -a^i_{010} \langle  H_1 \rangle_{\lambda}  \langle \frac{dH_2}{d \lambda} \rangle_{\lambda} 
+      \right.  \nonumber  \\ & & \qquad \left. 
+   + \langle a^i_{001}  H_2 \frac{dH_2}{d \lambda}  \rangle_{\lambda} -a^i_{001} \langle  H_2 \rangle_{\lambda}  \langle \frac{dH_2}{d \lambda} \rangle_{\lambda} 
+      + \langle a^i_{001}  H_2 \frac{dH_1}{d \lambda}  \rangle_{\lambda} -a^i_{001} \langle  H_2 \rangle_{\lambda}  \langle \frac{dH_1}{d \lambda} \rangle_{\lambda} 
+  \right] \nonumber \\ & & 
+  %%%
+  %%%
+   +\beta \left[ a^i_{110} \langle  H_0 \frac{dH_1}{d \lambda}  \rangle_{\lambda} -a^i_{110} \langle  H_0 \rangle_{\lambda}  \langle \frac{dH_1}{d \lambda} \rangle_{\lambda} 
+    + a^i_{101} \langle  H_0 \frac{dH_2}{d \lambda}  \rangle_{\lambda} -a^i_{101} \langle  H_0 \rangle_{\lambda}  \langle \frac{dH_2}{d \lambda} \rangle_{\lambda} 
+    \right.  \nonumber  \\ & & \qquad \left. %%%
+ +a^i_{020} \langle  H_1 \frac{dH_1}{d \lambda}  \rangle_{\lambda} -a^i_{020} \langle  H_1 \rangle_{\lambda}  \langle \frac{dH_1}{d \lambda} \rangle_{\lambda} 
+  +a^i_{011} \langle  H_1 \frac{dH_2}{d \lambda}  \rangle_{\lambda} -a^i_{011} \langle  H_1 \rangle_{\lambda}  \langle \frac{dH_2}{d \lambda} \rangle_{\lambda} 
+      \right.  \nonumber  \\ & & \qquad \left. %%%
+   + \langle a^i_{002}  H_2 \frac{dH_2}{d \lambda}  \rangle_{\lambda} -a^i_{002} \langle  H_2 \rangle_{\lambda}  \langle \frac{dH_2}{d \lambda} \rangle_{\lambda} 
+      + \langle a^i_{011}  H_2 \frac{dH_1}{d \lambda}  \rangle_{\lambda} -a^i_{011} \langle  H_2 \rangle_{\lambda}  \langle \frac{dH_1}{d \lambda} \rangle_{\lambda} 
+     \right] \nonumber \\ & & 
+      + \mathcal{O} (n^3). \nonumber
+\end{eqnarray}
+We note that there is a useful combination of terms if the scaling of $\lambda$ is \emph{separable} and \emph{equivalent} for the Hamiltonian components.  That is, $H_i \left( \vec{x}, \lambda \right) = f(\lambda) H_i \left( \vec{x}\right) $
+for $i \in \{1,2\}$.  The conditions of separability and equivalence constrain the paths for these calculations.  Under these conditions, it is readily seen that 
+\begin{equation}
+a^i_{k_0k_1k_2} = \frac{k_i}{k_1+k_2}. 
+\label{e:BradyCoeffs}
+\end{equation}
+Inserting equation \ref{e:BradyCoeffs} into equation \ref{e:Aderv}, we arrive at the desired result:
+\begin{equation}
+\frac{d \Delta A^*_i}{d \lambda} =   \left\langle \frac{dH_i}{d \lambda} \right \rangle_{\lambda} + \mathcal{O} (n^3). 
+\label{e:BradyProof}
+\end{equation}
+Because of the general clunkiness of cumulant expansions in terms of integer partitions, there is no straightforward way to prove the above result to all orders.  However, we have used symbolic manipulation to demonstrate that equation \ref{e:BradyCoeffs} holds to order 7, such that
+\begin{equation}
+\frac{d \Delta A^*_i}{d \lambda} =   \left\langle \frac{dH_i}{d \lambda} \right \rangle_{\lambda} + \mathcal{O} (n^8). 
+\label{e:BradyProof2}
+\end{equation}
+\warning{Will bump this to 10}
+The error term here is simply where we cut off our analyses, we expect that this relationship holds exactly for all cumulant orders.  
+Equation \ref{e:BradyCoeffs} and the conditions of equivalence and separability for the alchemical path are the central result of this work.  
+ The resulting components $\Delta A^*_i$ split the cumulants in a \warning{sensical} manner.  For example, $\Delta A^*_1$ contains $1/2$ of all $\langle  H_1 H_2\rangle_{\lambda,c}$ terms, $2/3$ of all $\langle  H_1^2 H_2\rangle_{\lambda,c}$ terms, etc. 
+
+Note that all cumulant terms containing a power of $H_0$ disappear from each free energy component, and therefore 
+the total free energy $\Delta A (\lambda) $ contains only a cumulant expansion of $H_1$ and $H_2$ taken at the state $\lambda$. 
+This is an intriguing result, and states that any change in a spectator component $H_0$ is exactly cancelled by the coupling of $H_0$ to the scaled components $H_1$ and $H_2$:
+ \begin{equation}
+\sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2=n} 
+{ n \choose k_0,k_1,k_2 } \left( 1- \delta_{0,k_0}  \right) \langle  H_0^{k_0} H_1^{k_1} H_2^{k_2} \rangle_{\lambda,c}
+\right)
+-  \langle  H_0^{n}  \rangle_{\lambda=0,c} \right] = 0,
+\label{e:SpectatorCancellation}
+\end{equation}
+where $\delta_{0,k_0} $ is the Kronecker delta function and $ \left( 1- \delta_{0,k_0}  \right)$ picks out all cumulants with non-zero instances of $H_0$. 
+
+The results presented in Brady \emph{et. al.}\cite{Brady:1996gm} are a special case of the above analyses.  In that work, there are no spectator components (the $\beta=0$, or non-interacting, state is taken as reference) and the Hamiltonian components scale linearly in $\beta$.  Thus, their results were only postulated to be valid for free energy calculations scaled linearly from the infinite-temperature regime.  In addition, only a  few of the coefficients (equation \ref{e:BradyCoeffs}) were shown using algebraic manipulation and a general result was not provided.  We have provided a general solution for these coefficients, and we have loosened the constraints and demonstrated that the above decomposition is valid for a much broader class of alchemical paths.  
+
+
+
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+\section{Applications}
+\warning{CBR, CCR, real paths for protein-protein binding, double mutant experiments}
+
+
+
+%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+\subsection{Confine, bind, and release (CBR)}
+The confine-bind-release (CBR) method.\cite{NULL}  We assume a reference system in which a receptor (of \emph{N} residues) is immersed in solvent.  In this reference state, a ligand is bound to a binding pocket with a set of restraints, though the ligand is non-interacting with the solvent and receptor.  In the final state, the interactions between the ligand and the solvent and receptor are turned on.  We will decompose all interactions involving the receptor into two terms: $R_0$, corresponding to \emph{N-1} residues, and $R_1$, the \emph{N}-th residue of interest.  Thus, our Hamilonian is 
+$H_T (\vec{x},\vec{\lambda}) = H_{R_0-S}(\vec{x},\lambda_0)+H_{R_1-S}(\vec{x,\lambda_1})+H_{L-S}(\vec{x,\lambda_2})
++ H_{R_0-L}(\vec{x},\lambda_3)+H_{R_1-L}(\vec{x},\lambda_4)$, where $\vec{\lambda}$ is the vector of $\lambda$-values for all five components. 
+The free energy of binding is 
+$\Delta A_{bind} = A\left(\vec{\lambda}=\left[1,1,1,1,1\right] \right) - 
+A\left( \vec{\lambda} = \left[ 1,1,0,0,0 \right]   \right)$. 
+Note that this is a simplification of the binding process.  The actual binding free energy accounts for the solvation free energy of the ligand and the effect of restraining the ligand in the binding pocket \cite{NULL}.  We ignore these effects
+since they have no contribution to the following analyses. 
+
+
+ From this, we can calculate the contribution of residue \emph{N} with the quantity $\Delta A^*_{R_1}$.  
+ We may be interested in using this quantity as a proxy for mutation studies, in which case the quantity of interest is 
+ $\Delta \Delta A_{R_1} = \left( A\left(\vec{\lambda}=\left[1,1,1,1,1\right] \right) - A\left(\vec{\lambda}=\left[1,1,0,0,0\right] \right) \right) -
+ \left( A\left(\vec{\lambda}=\left[1,0,1,1,0\right] \right)- A\left(\vec{\lambda}=\left[1,0,0,0,0\right] \right)\right) $, 
+ the difference in binding free energy obtained with and without residue \emph{N}.  Notice that $\lambda_1$ is used to toggle the interaction of $R_1$ with solvent, since the quantity  $\Delta \Delta A_{R_1}$ considers the case in which $R_1$ is completely removed.  Henceforth, we will denote the ensemble of the final bound state, $\left(\vec{\lambda}=\left[1,1,1,1,1\right] \right)$, with the subscript $T$. 
+ 
+If we perform a TI calculation of this binding process using the constraints dictated in section \ref{S:CumulantGeneral}, we can extract $\Delta A^*_{R_1}$ using equation \ref{e:TIcomps}:
+ \begin{equation}
+\Delta A^*_ {R_1}=
+\sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2=n} 
+{ n \choose k_0,k_1,k_2 } \left( \frac{k_2}{k_0+k_1+k_2} \right) \langle  H_{L-S}^{k_0} H_{R_0-L}^{k_1} H_{R_1-L}^{k_2} 
+\rangle_{T,c}
+\right)
+\right],
+\label{e:BradyDecomp:CBR}
+\end{equation}
+ 
+ 
+We are interested in how this quantity relates to $\Delta \Delta A_{R_1}$.  From the cumulant expansion, 
+ \begin{eqnarray}
+ \Delta \Delta A_{R_1} &=&
+ \sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2=n} 
+{ n \choose k_0,k_1,k_2 } \langle  H_{L-S}^{k_0} H_{R_0-L}^{k_1} H_{R_1-L}^{k_2} 
+\rangle_{T,c}
+\right) \right.  \label{e:DDGcumulants} \\ && \qquad \qquad \qquad \qquad \qquad \qquad \left. 
+- 
+ \sum_{k_0=0}^n 
+\left( {n \choose k_0 } \langle  H_{L-S}^{k_0} H_{R_0-L}^{n-k_0} \rangle_{\left(\vec{\lambda}=\left[1,0,1,1,0\right] \right),c}
+\right)
+\right]. \nonumber
+ \end{eqnarray}
+We may consider the free energy difference between the states $\left(\vec{\lambda}=\left[1,0,1,1,0\right] \right)$ and 
+$\left(\vec{\lambda}=\left[1,1,1,1,1\right] \right)$, over which the components $H_{R_1-S}$ and $H_{R_1-L}$ are toggled on and all other components are spectators.  The free energy for this process is:
+ \begin{eqnarray}
+ &&
+ \sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2+k_3+k_4=n} 
+{ n \choose k_0,k_1,k_2,k_3,k_4 } \langle  H_{R0-S}^{k_0}H_{R1-S}^{k_1}H_{L-S}^{k_2} H_{R_0-L}^{k_3} H_{R_1-L}^{k_4} 
+\rangle_{T,c}
+\right) \right.  \label{e:dAend} \\ && \qquad \qquad \qquad \qquad \qquad  \left. 
+- 
+\left(
+ \sum_{k_0+k_1+k_2=n} 
+{ n \choose k_0,k_1,k_2 } \langle  H_{R0-S}^{k_0} H_{L-S}^{k_1} H_{R_0-L}^{k_2} 
+\rangle_{\left(\vec{\lambda}=\left[1,0,1,1,0\right] \right),c}
+\right) 
+\right]. \nonumber
+ \end{eqnarray}
+%
+Considering equation \ref{e:dAend} in the context of equation \ref{e:SpectatorCancellation}, we can cancel the spectators $H_{L-S}$ and $H_{R_0-L}$:
+ \begin{eqnarray}
+ &&
+\sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2+k_3=n} 
+{ n \choose k_0,k_1,k_2,k_3} \left( 1- \delta_{0,k_1} \delta_{0,k_2}  \right) \langle  
+H_{R_1-S}^{k_0}H_{L-S}^{k_1} H_{R_0-L}^{k_2} H_{R_1-L}^{k_3} 
+\rangle_{T,c}
+\right) \right. \label{e:DDGspectators} \\ && \qquad \qquad \qquad \left. 
+- 
+\sum_{k_0=0}^n 
+\left( {n \choose k_0 } \langle  H_{L-S}^{k_0} H_{R_0-L}^{n-k_0} \rangle_{\left(\vec{\lambda}=\left[1,0,1,1,0\right] \right),c}
+\right)
+\right] = 0. \nonumber
+\end{eqnarray}
+Inserting equation \ref{e:DDGspectators} into equations \ref{e:BradyDecomp:CBR} and \ref{e:DDGcumulants}, we find:
+ \begin{eqnarray}
+ \Delta \Delta A_{R_1} - \Delta A^*_{R_1}  &=&
+ \sum_{n=2}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2+k_3=n} 
+{ n \choose k_0,k_1,k_2,k_3 }  \left( 1- \delta_{0,k_0} \right) \langle  H_{R_1-S}^{k_0} H_{L-S}^{k_1} H_{R_0-L}^{k_2} H_{R_1-L}^{k_3} 
+\rangle_{T,c}
+\right) \right.  \nonumber \\ && \qquad \left. 
+- 
+\left(
+ \sum_{k_0+k_1+k_2=n} 
+{ n \choose k_0,k_1,k_2 }  \left( 1- \delta_{0,k_2} \right)\left( \frac{1-k_2}{k_0+k_1+k_2} \right) \langle  H_{L-S}^{k_0} H_{R_0-L}^{k_1} H_{R_1-L}^{k_2} 
+\rangle_{T,c}
+\right) 
+\right] \nonumber \\ & = &
+\frac{\beta}{2} \left[ 
+2\langle  H_{R_1-S} H_{L-S} \rangle_{T,c} + 2\langle  H_{R_1-S} H_{R_0-L} \rangle_{T,c}
++2 \langle  H_{R_1-S} H_{R_1-L} \rangle_{T,c}
+\right. \nonumber \\ & & \qquad \qquad \qquad \qquad \left. 
+- \langle  H_{L-S} H_{R_1-L} \rangle_{T,c} -  \langle  H_{R_0-L} H_{R_1-L} \rangle_{T,c}
++ \mathcal{O} (n^3)
+\right]
+\label{e:DDG-DGbrady}
+ \end{eqnarray}
+ This is the difference between $\Delta \Delta A_{R_1}$, the free energy of binding with and without residue $R_1$, and $\Delta A^*_{R_1}$, the free
+ energy component of $R_1$ calculated via equation \ref{e:TIcomps}.   
+ We see that all first order cumulants have vanished in this energy term.  This is not surprising, as the enthalpic contribution to the binding process should 
+ be trivially decomposable.  The error terms leave us with a fractional entropic contribution that corresponds to the coupling of component $R_1$ to other Hamiltonian components.
+ 
+ This analysis can be used to guide mutation studies.  If we perform a single ligand binding free energy calculation, we can extract a free energy component for each residue involved in binding via equation \ref{e:BradyDecomp:CBR}.  If these quantities are used to predict where mutations might have the largest effect, the error between our prediction and the true $\Delta \Delta A$ is given by equation \ref{e:DDG-DGbrady}.  
+ 
+ 
+ \subsubsection{Numerical Results}
+ A few troubling issues
+ \begin{itemize}
+ \item We can see from equations \ref{e:TIcomps} that $\Delta A^*_{R_1}$ is going to track with the enthalpy.  Imagine the case in which the enthalpic contribution ($H_{R_1-L}$) is favorable.  In this case,  $\Delta A^*_{R_1} < 0$ always.  But there are many cases in which $\Delta \Delta A_{R_1}$ is unfavorable, either because there is a large, unfavorable entropic contribution or because $H_{R_1-L} > H_{R_1-S}$.
+ \item Despite the above point, it's still possible that we might get something useful out of the ranking of   $\Delta A^*_{R_1}$ and 
+ $\Delta A^*_{R_0}$.  But, this turns out to not be the case.  This ranking tends to do well when the enthalpies ($H_{R_0-L}$ and 
+ $H_{R_1-L}$) have the same sign, and it can handle most entropic effects (as we would expect from the splittings we've shown).  But, when something funky is going on -- if the enthalpies have different signs, or if there is some important contribution from $H_{R_0-S}$ or 
+ $H_{R_1-S}$ -- the free energy components are improperly ranked, and often have the wrong sign. 
+\item The above is relevant beyond CBR to all free energy cycles we might consider. 
+ \end{itemize}
+ 
+ 
+ 
+ \subsection{Confine, convert, and release (CCR)}
+Confine, convert, and release (CCR).  Consider a biomolecule with interactions described by a two-component Hamiltonian, $H_{T} \left( \vec{x},\vec{x}',\lambda,\right) = H_{R0} \left( \vec{x} \right) + H_{R1} \left( \vec{x} \right)+\lambda H_{C0} \left( \vec{x} ,\vec{x}' \right) + \lambda H_{C1} \left( \vec{x}, \vec{x}' \right)$.  
+$H_{R1}$ gives all interactions for one particular residue, and $H_{R0}$ contains all other interactions of the system.  The $H_C$ components are springs that constrain our biomolecule to some particular configuration $\vec{x}'$, modulated by the parameter $\lambda$.  
+ The states of interest have 0 spring energy and are defined by an order parameter $\xi$:
+  \begin{equation}
+A \left( \xi',\vec{x}',\lambda\right) = -\beta^{-1} \mbox{ln} \left[   \int_{\Omega} d \vec{x}  \:  \mbox{exp} 
+ \left[ -\beta H_T \left(\vec{x},\vec{x}',\lambda \right) \right] 
+ \delta \left( \xi \left( \vec{x} \right) - \xi'\right)
+ \right].  
+ \label{e:A.CCR}
+ \end{equation}
+ In CCR, we are interested in the free energy difference 
+ $\Delta A_{AB} = A \left( \xi_A,\lambda=0 \right) -   A \left( \xi_B,\lambda=0 \right) $, where $\xi_A$ and $\xi_B$ 
+ defined different conformations of the biomolecule.  
+ We choose two representative structures $\vec{x}_A$ and $\vec{x}_B$. 
+We calculate $\Delta A_{AB}$ in three steps: (1) confine the ensemble in state $A$ to the structure $\vec{X}_A$,
+(2) convert $\vec{x}_A$ to $\vec{x}_B$, 
+(3) release $\vec{x}_B$ to the ensemble of state $B$.  
+%For the confinement step, the Hamiltonian
+% $H_A \left(\vec{x},\lambda \right) = H_{T} \left( \vec{x} \right) + \lambda k_0 \left( \vec{x} - \vec{x}_A   \right)^2$, gives the free energy:
+%   \begin{equation}
+%A _A \left( \lambda \right) = -\beta^{-1} \mbox{ln} \left[   \int_{\Omega} d \vec{x}  \:  \mbox{exp} 
+% \left[ -\beta  H_A\left(\vec{x} \lambda \right)  
+% \right]
+% \right].  
+% \label{e:CCRSpring}
+% \end{equation}
+ $\Delta A_{AB} = \left[ A(\xi_B,\vec{x}_B,0) - A(\xi_B,\vec{x}_B,1) \right]  +  \left[ A(\xi_B,\vec{x}_B,1) - A(\xi_A,\vec{x}_A,1)  \right] +  \left[ A(\xi_A,\vec{x}_A,1) - A(\xi_A,\vec{x}_A,0) \right] $. 
+ 
+ 
+ Again,
+ we perform a TI calculation of this binding process using the constraints dictated in section \ref{S:CumulantGeneral} in order to extract $\Delta A^*_{R1}$ using equation \ref{e:TIcomps}.  Consider only the first step of the CCR cycle, where we constrain the molecule to state $\vec{x}_A$.  Simplifying the notation $H_{C0}\left( \vec{x},\vec{x}_A  \right) = H_{C0,A}$ : 
+ \begin{equation}
+\Delta A^{1*}_ {R1}=
+\sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2+k_3=n} 
+{ n \choose k_0,k_1,k_2,k_3 } \left( \frac{k_3}{k_0+k_1+k_2+k_3} \right) \langle  
+H_{R0}^{k_0} H_{R1}^{k_1} H_{C0,A}^{k_2} H_{C1,A}^{k_3} 
+\rangle_{\vec{x}_A,c}
+\right)
+\right].
+\label{e:BradyDecomp:CCR1}
+\end{equation}
+Note that the final subscript indicates that our ensemble average is taken at the constrained state $\vec{X}_A$. 
+ This can be repeated to obtain the free energy for the final step, $\Delta A^{3*}_ {R1}$. 
+ For the middle step, we assume that the biomolecule can be constrained to an arbitrarily tight state so that all entropic contributions to the free energy are negligible.  Then, 
+ \begin{equation}
+ \Delta A^{2*}_ {R1}= H_T \left( \vec{x}_B,\vec{x}_B,1 \right) -  H_T \left( \vec{x}_A,\vec{x}_A,1 \right) .
+ \label{e:CCREnthalpy}
+ \end{equation}
+ Combining all terms:
+  \begin{eqnarray}
+\Delta A^*_ {R1} &=&
+\sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2+k_3=n} 
+{ n \choose k_0,k_1,k_2,k_3 } \left( \frac{k_3}{k_0+k_1+k_2+k_3} \right) \langle  
+H_{R0}^{k_0} H_{R1}^{k_1} H_{C0,A}^{k_2} H_{C1,A}^{k_3} 
+\rangle_{\vec{x}_A,c}
+\right)
+\right] \nonumber \\ 
+& - &
+\sum_{n=1}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+\left(
+ \sum_{k_0+k_1+k_2+k_3=n} 
+{ n \choose k_0,k_1,k_2,k_3 } \left( \frac{k_3}{k_0+k_1+k_2+k_3} \right) \langle  
+H_{R0}^{k_0} H_{R1}^{k_1} H_{C0,B}^{k_2} H_{C1,B}^{k_3} 
+\rangle_{\vec{x}_B,c}
+\right)
+\right] \nonumber \\ 
+& + &
+H_T \left( \vec{x}_B,\vec{x}_B,1 \right) -  H_T \left( \vec{x}_A,\vec{x}_A,1 \right) 
+\label{e:BradyTotal:CCR}
+\end{eqnarray}
+ 
+ We can relate this quantity back to the $\Delta \Delta A$ with and without residue 1, as we did above for CBR.  The true $\Delta \Delta A$ will have no $H_C$ components, while the $\Delta A^*$ defined above contains \emph{only} $H_C$ components for the confine and release steps.  
+ Drawing a connection between these two quantities will directly rely on assuming that $H_{C1}$ is tightly coupled to 
+  $H_{R1}$ and weakly coupled to  $H_{R0}$. 
+ 
+Two notes on CCR.  First, the practical implementation of CCR is such that the confined integrals given in equation \ref{e:A.CCR} are never evaluated in any converged sense.  Rather, we assume that when we `release' conformation B, it never travels outside of $\xi_B$ over the timescale of our simulations.  This leaves a decent chunk of the phase space unexplored over the end of the alchemical path (as $\lambda \rightarrow 0$).  It is not clear to me how large this effect will be. 
+ 
+ Second, equation \ref{e:CCREnthalpy} is starting to bother me.  All higher order terms vanish because the confinement enthalpy should be incredibly large.  But, we are subtracting these incredibly large terms, in which case the higher order cumulants may become important again upon this subtraction.  
+ Another way to see this is to look at the confinement step in isolation, summing contributions from both $R0$ and $R1$ to get the total free energy difference for this step, $\Delta A^1 = \Delta A^{1*}_ {R0}+\Delta A^{1*}_ {R1}$:
+ \begin{equation}
+ \Delta A^1 =  \left \langle H_{C0,A}+H_{C1,A} \right \rangle_{\vec{X}_A} + \mathcal{O} (n^2)
+ \label{e:CCR:ConfinementTotal}
+ \end{equation}
+ The first order term for the free energy of confinement is just the confinement enthalpies taken \emph{at the confined state} $\vec{x}_A$.  The second order term will include things like $\left \langle H_{C0,A} H_{R0,A} \right \rangle_{\vec{X}_A,c}$, but since these are taken at $\vec{X}_A$ they should be vanishingly small according to one of the central assumptions of CCR.  This is troubling.  I can make huge changes to $\xi_A$, redo the confinement step, and via equation \ref{e:CCR:ConfinementTotal} we can see that these changes will not be reflected in $ \Delta A^1$.  
+ 
+ How can this be the case?  Well,  confinement, whatever we are doing with $\xi_A$ does not matter all that much because the $H_C$ components \emph{do} dominate the free energy difference for this step.  But, when we look at the whole cycle, the $\xi_A$ and $\xi_B$ terms should become very important.  Let's look at the total free energy change $\Delta A_{AB} = \Delta A^*_ {R0}+\Delta A^*_ {R1}$:
+ \begin{eqnarray}
+ \Delta A_{AB} &= &
+ \left \langle H_{C0,A}+H_{C1,A} \right \rangle_{\vec{X}_A} +  \frac{\beta}{2}\left \langle \left( H_{C0,A}+H_{C1,A}+H_{R0,A}+H_{R1,A} \right)^2 \right \rangle_{\vec{X}_A,c}
+ - \left \langle H_{C0,B}+H_{C1,B} \right \rangle_{\vec{X}_B} 
+ \nonumber \\ 
+ & -& \frac{\beta}{2}\left \langle \left( H_{C0,B}+H_{C1,B} + H_{R0,B}+H_{R1,B} \right)^2 \right \rangle_{\vec{X}_B,c}
+ +H_T \left( \vec{x}_B,\vec{x}_B,1 \right) -  H_T \left( \vec{x}_A,\vec{x}_A,1 \right) 
+ \nonumber  \\ & = & 
+  H_{R0,B}+H_{R1,B}-H_{R0,A}-H_{R1,A}
+   \nonumber \\
+ & + & 
+ \frac{\beta}{2}\left \langle \left( H_{C0,A}+H_{C1,A} +H_{R0,A}+H_{R1,A} \right)^2 \right\rangle_{\vec{x}_A,c}  +  \frac{\beta}{2}\left \langle \left( H_{C0,B}+H_{C1,B} + H_{R0,B}+H_{R1,B}  \right)^2 \right \rangle_{\vec{X}_B,c}
+ \nonumber \\
+ \label{e:CCRtot}
+ \end{eqnarray}
+ To me, this is troubling.  All of the interesting effects related to states $\xi_A$ and $\xi_B$ should be wrapped up in the coupling terms on the last line.  But, these terms are basically negligible for any of the 3 components of the free energy cycle, for which the confinement energies dominate.  We are subtracting three very large quantities, and these higher order terms should matter after the subtraction, but the analogous terms for the conversion step are omitted.  
+ 
+ In other words, we could say that $10^6+2 \approx 10^6$, and $10^6+1 \approx 10^6$, and $10^6 - 10^6 =0$ , so $2-1=0$.  
+ But, I haven't every done any of these calculations myself, so I there is a very good chance I'm missing something here.  Thoughts? 
+ 
+ 
+ %%%%%%%%%%%
+ %%%%%%%%%%%
+ %%%%%%%%%%%%
+ %%%%%%%%%%%%%
+ \subsection{Real-path analysis}
+ %%%%%%%%%%%
+ %%%%%%%%%%%
+ %%%%%%%%%%%
+ 
+ \warning{Fill this out with Justin's notes}
+ 
+ Real paths. We revisit the framework outlined in section \ref{s:Theory} and adjust as necessary to account for free energy differences along coordinate paths, rather than alchemical paths. Consider a Hamiltonian with two components, 
+ $H_{T} \left( \vec{x} \right) = H_1 \left( \vec{x} \right) + H_2 \left( \vec{x} \right)$.  The relevant free energy is defined not by an alchemical parameter, but by a restriction on the configurational domain dictated by an order parameter $\xi$.  The canonical partition function is
+ \begin{equation}
+ Z \left( \xi' \right) = \int_{\Omega} d \vec{x}  \:  \mbox{exp} 
+ \left[ -\beta H_T \left(\vec{x} \right) \right] 
+ \delta \left( \xi \left( \vec{x} \right) - \xi'\right),
+ \label{e:RealZ}
+ \end{equation}
+ which defines the free energy $A \left( \xi'\right) = -\beta^{-1} \mbox{ln} Z \left( \xi' \right)$. 
+ 
+ Carrying this term through, the cumulant expansion is this:
+ 
+ Similarly, we can describe the change along the order parameter with a relationship analogous to
+ the TI given in equation \ref{NULL} \cite{NULL}: 
+ 
+For real paths, we cannot impose the constraint of separability and equivalence given in section \ref{NULL}.  In analogy
+to equation \ref{e:BradyDecomp1}, we will postulate that
+
+where xx is non-integrable `error term' that will relate the
+results of this section to the results of section \ref{NULL}.  The inclusion of this error term ensure that there is no 
+unique solution to the coefficients xx.  However, we note that an obvious approach is to minimize the sum of total coefficients in the error term, \warning{sum of squares}.  In this case, the coefficients revert to the same set as given in section \ref{NULL} and the error term is:
+
+This error term defines the deviation of free energy components taken from a real-path calculation from those defined in equation \ref{NULL}.  
+ 
+ Consider this error term in the context of the constraints of separability and equivalence given for alchemical paths in section \ref{NULL}.  This error term ... \textit{range} of interactions:  if $H_1$ is long-ranged and $H_2$ is short ranged, $error term$ is expected to be large.  If the range of these interactions are similar, the error term should be small.  This 
+ effect is convolved with the path that is taken. 
+ 
+ This is relevant for protein-protein binding. 
+ 
+ 
+ 
+ \subsection{Double mutant experiments}
+ Double mutants.  Consider a biomolecule with interactions described by a three-component Hamiltonian,
+ $H_{T} \left( \vec{x} \right) = H_0 \left( \vec{x} \right) + H_A \left( \vec{x} \right) + H_B \left( \vec{x} \right)$, where $H_A$ and $H_B$ contain all interactions for residues \emph{A} and \emph{B}, respectively, while $H_0$ contains all other interactions of the system.   We are interested in a free energy change between two states defined by an order parameter $\xi$.  A double mutant experiment, as in figure \ref{f:DoubleMutant}, aims to describe the coupling between residues \emph{A} and \emph{B} with a calculation of the quantity:
+ \begin{equation}
+ \Delta \Delta A_{\text{DM}} =  \left[ A_{AB\xi_1} - A_{AB\xi_0} \right] - \left[ A_{B\xi_1} - A_{B\xi_0} \right]
+ - \left[ A_{A\xi_1} - A_{A\xi_0} \right] + \left[ A_{0\xi_1} - A_{0\xi_0} \right]. 
+ \label{e:DoubleMutant}
+ \end{equation}
+ Expanding equation \ref{e:DoubleMutant} into the corresponding cumulants and using equation \ref{e:SpectatorCancellation} to cancel the spectator components of each free energy change, we can see that
+ \begin{eqnarray}
+  \Delta \Delta A_{\text{DM}} &=& 
+   \sum_{n=2}^{\infty}  \frac{\beta^{n-1}}{n!} 
+\left[
+ \sum_{k_0+k_A+k_B=n} 
+{ n \choose k_0,k_A,k_B}  \left( 1- \delta_{0,k_A} \delta_{0,k_B} \right) \langle  H_0^{k_0} H_A^{k_A} H_B^{k_B} 
+\rangle_{T,c} \right]
+\nonumber \\ 
+& = & 
+\beta \left \langle H_A H_B \right \rangle_{AB\vec{\xi}_1} + \mathcal{O} \left( n^3 \right) 
+ \label{e:DoubleMutantExpansion}
+ \end{eqnarray}
+ 
+\begin{figure}
+ \centering
+  \includegraphics[width=8.6cm]{doubleMutant.png}
+\caption{\label{f:DoubleMutant} { Taken from \cite{Cho2014} }}
+\end{figure}
+
+There's nothing else to really add here, I just think it's nice that the cumulant framework gives an easy way to think about double mutant cycles.  This might make a nice paragraph in section II when we introduce the decomposition.  
+
+ 
+ 
+\clearpage
+
+\bibliographystyle{h-physrev}
+\bibliography{Decompositions}
+
+\end{document}
+
+
