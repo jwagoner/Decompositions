@@ -12,7 +12,7 @@
 
 
 \newcommand{\warning}[1]{{\textsf{{\textcolor{red}{{[#1]}{}}}}}}
-\renewcommand{\vec}[1]{{\mathbf{#1}}}
+\renewcommand{\vec}[1]{{\bm{#1}}}
 
 
 \begin{document}
@@ -51,7 +51,249 @@ We derive a formalism in which meaningful free energy components $\Delta A^*_i$ 
 %%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%
+\section{Component free energies are path-dependent}
 
+We will begin with a Hamiltonian that is parameterized by two control parameters: $\vec\lambda = (\lambda_1, \lambda_2)$:
+\begin{equation}
+H_T = H_0 + H_1(\vec\lambda) + H_2(\vec\lambda).
+\end{equation}
+We call $H_0$ a spectator component because it has no $\vec\lambda$-dependence, whereas $H_1$ and $H_2$ have some as-yet unspecified dependence on $\lambda_1$ and $\lambda_2$. This is a minimal example that contains the necessary complexity of the problem at hand.
+
+Each point in control parameter space, $(\lambda_1, \lambda_2)$, species a unique ensemble with the configurational partition function:
+\begin{equation}
+Z(\vec\lambda) = 
+\int_\Omega d\vec x \exp \left[-\beta H_T\left(\vec x, \vec\lambda\right)\right].
+\end{equation}
+The excess free energy relative to an ideal gas is:
+\begin{eqnarray}
+\beta A(\vec\lambda) &=&
+\ln \left[
+\frac
+	{\int_\Omega d\vec x}
+	{\int_\Omega \vec x \exp\left[-\beta H_T(\vec x, \vec\lambda) \right]}
+\right]\\
+&=&
+\ln \left[
+\frac
+	{\int_\Omega d\vec x \exp\left[-\beta H_T(\vec x, \vec\lambda) \right]
+	 \exp\left[\beta H_T(\vec x, \vec\lambda) \right]}
+	{\int_\Omega d\vec x \exp\left[-\beta H_T(\vec x, \vec\lambda) \right]}
+\right]\\
+&=&
+\ln\left<\exp\left[\beta H_T(\vec x, \vec\lambda)\right]\right>_{\vec\lambda},
+\end{eqnarray}
+where $\langle \cdots \rangle_{\vec\lambda}$ denotes an average taken over the ensemble at state $\vec\lambda$.  This is the Zwanzig relation, albeit in a slightly unusual form, as the perturbation moves toward the non-interacting state taken with respect to the reference at state $\vec\lambda$. We note that $A(\vec\lambda)$ is a scalar field.
+
+We can take the gradient of the free energy to yield the total differential:
+\begin{equation}
+d\vec A = \frac{\partial A}{\partial \lambda_1} d\lambda_1 + \frac{\partial A}{\partial \lambda_2} d\lambda_2. \label{differential}
+\end{equation}
+
+We can define a path $(\lambda_1(t), \lambda_2(t))$ parameterized by $t \in [0, 1]$. The free energy change between the start and end states of the path is then:
+\begin{align}
+\Delta A &= A\left(\vec\lambda\left(1\right)\right) -
+            A\left(\vec\lambda\left(0\right)\right) \\
+         &= \int_0^1 \left[d\vec A\left(\vec\lambda\left(t\right)\right)
+         \cdot
+         \vec\lambda'\left(t\right)\right] dt. \label{integral}
+\end{align}
+
+Equation \ref{integral} is path independent because $d\vec A$ is an exact differential. We know this by construction, as $d\vec A$ is the gradient of the scalar field $A(\vec\lambda)$. One can show that Eq. \ref{differential} is equal to:
+\begin{equation}
+d\vec A = \left< \frac{\partial H_T}{\partial \lambda_1} \right> d\lambda_1 +
+          \left< \frac{\partial H_T}{\partial \lambda_2} \right> d\lambda_2.\label{dA}
+\end{equation}
+One can also show that:
+\begin{equation}
+\frac{\partial}{\partial \lambda_2}\left< \frac{\partial H}{\partial \lambda_1} \right>
+=
+\frac{\partial}{\partial \lambda_1}\left< \frac{\partial H}{\partial \lambda_2} \right>,
+\end{equation}
+which further proves that $d\vec A$ is an exact differential.
+
+The functional form of Eq. \ref{dA} suggest a natural decomposition into components:
+\begin{align}
+d\vec A &= d\vec A_1 + d\vec A_2 \\
+d\vec A_1 &= 
+\left< \frac{\partial H_1}{\partial \lambda_1} \right> d\lambda_1 +
+\left< \frac{\partial H_1}{\partial \lambda_2} \right> d\lambda_2 \\
+d\vec A_2 &= 
+\left< \frac{\partial H_2}{\partial \lambda_1} \right> d\lambda_1 +
+\left< \frac{\partial H_2}{\partial \lambda_2} \right> d\lambda_2
+\end{align}
+
+However, in general:
+\begin{align}
+\frac{\partial}{\partial \lambda_2}\left<\frac{\partial H_1}{\partial \lambda_1}\right>
+&\neq
+\frac{\partial}{\partial \lambda_1}\left<\frac{\partial H_1}{\partial \lambda_2}\right>\\
+\frac{\partial}{\partial \lambda_2}\left<\frac{\partial H_2}{\partial \lambda_1}\right>
+&\neq
+\frac{\partial}{\partial \lambda_1}\left<\frac{\partial H_2}{\partial \lambda_2}\right>.
+\end{align}
+This demonstrates that $d\vec A_1$ and $d\vec A_2$ are not exact differentials. So, although $\Delta A$ will be path independent, $\Delta A_1$ and $\Delta A_2$ will depend on the path of integration.
+
+\subsection{Thermodynamic derivatives of the free energy decomposition}
+\label{s:CumulantDerv}
+
+By evaluating $\frac{d}{d\lambda_i}\left<H_T\right>_{\vec\lambda}$ for $i \in {1, 2}$ and rearranging, we can show:
+\begin{equation}
+\left<\frac{dH_T}{d\lambda_i}\right>_{\vec\lambda} = 
+\frac{d}{d\lambda_i}\left<H_T\right>_{\vec\lambda} +
+\beta \mathrm{cov}_{\vec\lambda}\left(H_T, \frac{dH_T}{d\lambda_i} \right).
+\label{eq:deriv}
+\end{equation}
+The two terms on the right correspond to $\lambda_i$-derivatives of the enthalpy and entropy. The integral of Eq.~\ref{eq:deriv} does not depend on the path, and the changes in free energy, enthalpy, and entropy will be path independent---as expected for state functions.
+
+A similar analysis can be performed on each component, yielding:
+\begin{eqnarray}
+\left<\frac{dH_0}{d\lambda_i}\right>_{\vec\lambda} &=& 
+\frac{d}{d\lambda_i}\left<H_0\right>_{\vec\lambda} +
+\beta\mathrm{cov}_{\vec\lambda}\left(H_0, \frac{dH_1}{d\lambda_i} \right)+
+\beta\mathrm{cov}_{\vec\lambda}\left(H_0, \frac{dH_2}{d\lambda_i} \right)
+\label{eq:H0_cov}=0\\
+\left<\frac{dH_1}{d\lambda_i}\right>_{\vec\lambda} &=& 
+\frac{d}{d\lambda_i}\left<H_1\right>_{\vec\lambda} +
+\beta\mathrm{cov}_{\vec\lambda}\left(H_1, \frac{dH_1}{d\lambda_i} \right)+
+\beta\mathrm{cov}_{\vec\lambda}\left(H_1, \frac{dH_2}{d\lambda_i} \right)\\
+\left<\frac{dH_2}{d\lambda_i}\right>_{\lambda_i} &=& 
+\frac{d}{d\lambda_i}\left<H_2\right>_{\lambda_i} +
+\beta\mathrm{cov}_{\vec\lambda}\left(H_2, \frac{dH_1}{d\lambda_i} \right)+
+\beta\mathrm{cov}_{\vec\lambda}\left(H_2, \frac{dH_2}{d\lambda_i} \right).
+\end{eqnarray}
+We note that Eq.~\ref{eq:H0_cov} must be equal to zero because $H_0$ has no $\lambda_i$-dependence. This is an intriguing result, as it shows that any change in the $\left<H_0\right>$ component of the enthalpy must be exactly compensated for by a corresponding change in the entropy due to coupling between $H_0$ and the instantaneous $\lambda_i$-derivatives of the perturbed components, $H_1$ and $H_2$.
+
+The enthalpy terms in each expression are obviously path-independent, as they are integrals of derivatives of state functions. The entropic components will, in general, be path dependent.
+
+However, let us consider the case where the Hamiltonian components are scaled linearly. Let us further stipulate that the scaling be \emph{equivalent} such that $\lambda_1 = \lambda_2 = \lambda$ and $H_j = \lambda H_j^*(\vec x)$ for $j\in{1,2}$. In this case, we find:
+\begin{eqnarray}
+\left<\frac{dH_1}{d\lambda}\right>_\lambda &=& 
+\frac{d}{d\lambda}\left<H_1\right>_\lambda +
+\beta\lambda\mathrm{Cov}\left(H_1^*,H_1^*\right)_\lambda+
+\underline{\beta\lambda\mathrm{Cov}\left(H_1^*,H_2^*\right)_\lambda}\\
+\left<\frac{dH_2}{d\lambda}\right>_\lambda &=& 
+\frac{d}{d\lambda}\left<H_2\right>_\lambda +
+\underline{\beta\lambda\mathrm{Cov}\left(H_2^*,H_1^* \right)_\lambda}+
+\beta\lambda\mathrm{Cov}\left(H_2^*, H_2^* \right)_\lambda.
+\end{eqnarray}
+The underlined terms are the $\lambda$-derivatives of the entropic coupling between $H_1$ and $H_2$. When the Hamiltonian components are scaled linearly and we follow the \emph{equivalent} path, these terms are equal. Thus, the entropic coupling is split evenly between $\Delta A^*_1$ and $\Delta A^*_2$.
+
+\warning{I think we should use some notation like $H^*$ notation for the unscaled Hamiltonian components. In a few spots we say $H = \lambda H$, which doesn't really make sense.}
+
+\warning{This is as far as I got. There is a bunch of cut-and-pasted stuff below that we could re-work or eliminate. Eq.~25--26 have some interesting relationships where components have to sum to zero.}
+
+\warning{One other thing: it's important to keep in mind that $\lambda$ is a function of $t$. So, although we are linearly scaling the Hamiltonian, there are still many possible paths that aren't ``linear''. I'm not sure how to best make this clear.}
+
+These results demonstrate that for a separable, equivalent scaling: (1) results in a path-independent splitting of the enthalpy terms (for the set of alchemical paths that are separable and equivalent for all components); (2) assigns the entropic component due solely to fluctuations in individual Hamiltonian terms to the corresponding free energy component; and (3) evenly splits the entropic coupling terms between the corresponding free energies.
+
+We can write $\left<\partial H_i / \partial \lambda_j\right>$ with $i \in \{1,2\}$ and $j \in \{1,2\}$ as:
+\begin{align}
+\left<\frac{\partial H_i}{\partial \lambda_j}\right> &=
+\frac{\partial}{\partial \lambda_j}\left<H_i\right> +
+\beta\left<H_i\frac{\partial H}{\partial \lambda_j}\right>
+-\beta\left<H_i\right>\left<\frac{\partial H}{\partial \lambda_j}\right> \\
+&= \frac{\partial}{\partial \lambda_j}\left<H_i\right> +
+\beta \mathrm{Cov}\left( H_i, \frac{\partial H}{\partial \lambda_j}\right).
+\end{align}
+Note, I might have the sign wrong for the covariance term. I need to work through the derivation again.
+
+If each Hamiltonian term depends only on one $\lambda$-value, i.e. $H = H_0 + H_1(\lambda_1) + H_2(\lambda_2)$, then we have:
+\begin{align}
+dA &= dA_0 + dA_1 + dA_2 \\
+dA_0 &=
+\left( \underbrace{
+	\frac{\partial}{\partial \lambda_1}
+    	\left<H_0\right> +
+    \mathrm{Cov}\left(H_0,
+    	\frac{\partial H_1}{\partial \lambda_1}
+    \right)
+} \right) d\lambda_1 +
+\left( \underbrace{
+	\frac{\partial}{\partial \lambda_2}
+    	\left<H_0\right> +
+    \mathrm{Cov}\left(H_0,
+    	\frac{\partial H_2}{\partial \lambda_2}
+    \right)
+} \right) d\lambda_2 \\
+dA_1 &=
+\left(
+	\frac{\partial}{\partial \lambda_1}
+    	\left<H_1\right> +
+    \mathrm{Cov}\left(H_1,
+    	\frac{\partial H_1}{\partial \lambda_1}
+    \right)
+\right) d\lambda_1 +
+\left(\underbrace{
+	\frac{\partial}{\partial \lambda_2}
+    	\left<H_1\right> +
+    \mathrm{Cov}\left(H_1,
+    	\frac{\partial H_2}{\partial \lambda_2}
+    \right)
+}\right) d\lambda_2 \\
+dA_2 &=
+\left(\underbrace{
+	\frac{\partial}{\partial \lambda_1}
+    	\left<H_2\right> +
+    \mathrm{Cov}\left(H_2,
+    	\frac{\partial H_1}{\partial \lambda_1}
+    \right)
+}\right) d\lambda_1 +
+\left(
+	\frac{\partial}{\partial \lambda_2}
+    	\left<H_2\right> +
+    \mathrm{Cov}\left(H_2,
+    	\frac{\partial H_2}{\partial \lambda_2}
+    \right)
+\right) d\lambda_2,
+\end{align}
+where the terms grouped by underbraces sum to zero.
+
+This seems to be quite an interesting result. For example, changing $\lambda_1$ may result in a change to $H_0$, but this will be exactly compensated for by a change $\mathrm{Cov}(H_0, \partial H_1 / \partial \lambda_1)$. We know that the sum $dA_0 + dA_1 + dA_2$ is an exact differential, so the change in $H_0$ must end up in the $\mathrm{Cov}(H_1, \partial H_1 / \partial \lambda_1)$ term.
+
+I suspect I have derived the sign of the covariance term incorrectly. If that's true, then underbraced terms look like relationships between changes in energy and fluctuations between energy terms, which remind me of the similar relationships for heat capacity.
+
+We can consider a simpler situation, where the Hamiltonian terms are scaled by identical functions, $H = H_0 + f(\lambda_1)H_1^* + f(\lambda_2)H_2^*$. In this case, we obtain:
+\begin{align}
+dA_0 &=
+\left( \underbrace{
+	\frac{\partial}{\partial \lambda_1}
+    	\left<H_0\right> +
+    	f'(\lambda_1)\mathrm{Cov}\left(H_0,H_1^*\right)
+} \right) d\lambda_1 +
+\left( \underbrace{
+	\frac{\partial}{\partial \lambda_2}
+    	\left<H_0\right> +
+    	f'(\lambda_2)\mathrm{Cov}\left(H_0,H_2^*\right)
+} \right) d\lambda_2 \\
+dA_1 &=
+\left(
+	\frac{\partial}{\partial \lambda_1}
+    	\left<H_1\right> +
+    	f(\lambda_1)f'(\lambda_1)\mathrm{Cov}(H_1^*,H_1^*)
+\right) d\lambda_1 +
+\left(\underbrace{
+	\frac{\partial}{\partial \lambda_2}
+    	\left<H_1\right> +
+    	f(\lambda_1)f'(\lambda_2)\mathrm{Cov}(H_1^*,H_2^*)
+}\right) d\lambda_2 \\
+dA_2 &=
+\left(\underbrace{
+	\frac{\partial}{\partial \lambda_1}
+    	\left<H_2\right> +
+    	f(\lambda_2)f'(\lambda_1)\mathrm{Cov}(H_2^*,H_1^*)
+}\right) d\lambda_1 +
+\left(
+	\frac{\partial}{\partial \lambda_2}
+    	\left<H_2\right> +
+    	f(\lambda_2)f'(\lambda_2)\mathrm{Cov}(H_2^*, H_2^*)
+\right) d\lambda_2.
+\end{align}
+If we follow the simultaneous path, where $\lambda_1 = \lambda_2 = \lambda$, then the underbraced terms for $dA_1$ and $dA_2$ are equal. For any path, the second term of $dA_1$ will be zero. Therefore, any change to $\left< H_1 \right>$ due to a change in $\lambda_2$ will show up in the second term of $dA_2$, and vice versa. However, if we follow the simultaneous path, these cross terms are identical and $dA_1$ will contain all of the changes to $\left< H_1 \right>$ and $dA_2$ will contain all of the changes to $\left< H_2 \right>$.
+
+
+%%%%%%%%%%%%%
+%%%%%%%%%%%%%
+%%%%%%%%%%%%%
 \section{Cumulant decomposition of free energies}
 \label{S:CumulantGeneral}
 
@@ -150,57 +392,8 @@ Though $\Delta A^*_1  (\lambda)+ \Delta A^*_2  (\lambda)= \Delta A (\lambda)$, t
 We give two perspectives of the constraints we will place on these alchemical paths.  First, in section \ref{s:CumulantDerv} we present an analysis of the derivative itself, 
 $\left\langle \frac{dH_i}{d \lambda'} \right \rangle_{\lambda'}$.  Second, in section \ref{s:CumultantInt}, we derive the quantity that this derivative integrates to in terms of the underlying cumulant expansion.  These sections can be understood independently, and they each offer an interesting perspective of the underlying decomposition. 
 
-
 %%%%%%%%
 %%%%%%%%
-\subsection{Thermodynamic derivatives of the free energy decomposition}
-\label{s:CumulantDerv}
-
-By evaluating $\frac{d}{d\lambda}\left<H_T\right>$ and rearranging, we can show:
-\begin{equation}
-\left<\frac{dH_T}{d\lambda}\right>_\lambda = 
-\frac{d}{d\lambda}\left<H_T\right>_\lambda +
-\beta \mathrm{Cov}\left(H_T, \frac{dH_T}{d\lambda} \right)_\lambda,
-\end{equation}
-where the subscript $\lambda$ indicates that averages or covariances are taken from the ensemble with a specified value of $\lambda$.
-
-The first term on the left is obviously the $\lambda$-derivative of the enthalpy and will give the enthalpy when integrated: $\Delta H_T = \left<H_T\right>_{\lambda=1} - \left<H_T\right>_{\lambda=0}$. The covariance term is the derivative of the entropy. When integrated, this will yield $-T\Delta S_T$, which is path independent.
-
-A similar analysis can be performed on each component, yielding:
-\begin{eqnarray}
-\left<\frac{dH_0}{d\lambda}\right>_\lambda &=& 
-\frac{d}{d\lambda}\left<H_0\right>_\lambda +
-\beta\mathrm{Cov}\left(H_0, \frac{dH_1}{d\lambda} \right)_\lambda+
-\beta\mathrm{Cov}\left(H_0, \frac{dH_2}{d\lambda} \right)_\lambda \label{eq:H0_cov}=0\\
-\left<\frac{dH_1}{d\lambda}\right>_\lambda &=& 
-\frac{d}{d\lambda}\left<H_1\right>_\lambda +
-\beta\mathrm{Cov}\left(H_1, \frac{dH_1}{d\lambda} \right)_\lambda+
-\beta\mathrm{Cov}\left(H_1, \frac{dH_2}{d\lambda} \right)_\lambda\\
-\left<\frac{dH_2}{d\lambda}\right>_\lambda &=& 
-\frac{d}{d\lambda}\left<H_2\right>_\lambda +
-\beta\mathrm{Cov}\left(H_2, \frac{dH_1}{d\lambda} \right)_\lambda+
-\beta\mathrm{Cov}\left(H_2, \frac{dH_2}{d\lambda} \right)_\lambda.
-\end{eqnarray}
-We note that Eq.~\ref{eq:H0_cov} must be equal to zero because $H_0$ has no $\lambda$-dependence. As with the cumulant expressions, this implies the intriguing result that all changes to $H_0$ due to the perturbation are compensated by couplings with $H_1$ and $H_2$.
-
-The enthalpy terms in each expression are obviously path-independent, as they are integrals of derivatives of state functions. The entropic components will, in general, be path dependent.
-
-We note that when the scaling of $\lambda$ is \emph{separable} and \emph{equivalent} for all components, 
-$H_i \left( \vec{x}, \lambda \right) = f(\lambda) H_i \left( \vec{x}\right) $, we have:
-\begin{eqnarray}
-\left<\frac{dH_1}{d\lambda}\right>_\lambda &=& 
-\frac{d}{d\lambda}\left<H_1\right>_\lambda +
-f(\lambda)f'(\lambda)\beta\mathrm{Cov}\left(H_1,H_1\right)_\lambda+
-\underline{f(\lambda)f'(\lambda)\beta\mathrm{Cov}\left(H_1,H_2\right)_\lambda}\\
-\left<\frac{dH_2}{d\lambda}\right>_\lambda &=& 
-\frac{d}{d\lambda}\left<H_2\right>_\lambda +
-\underline{f(\lambda)f'(\lambda)\beta\mathrm{Cov}\left(H_2,H_1 \right)_\lambda}+
-f(\lambda)f'(\lambda)\beta\mathrm{Cov}\left(H_2,H_2 \right)_\lambda,
-\end{eqnarray}
-where the underlined terms are identical.
-
-These results demonstrate that for a separable, equivalent scaling: (1) results in a path-independent splitting of the enthalpy terms (for the set of alchemical paths that are separable and equivalent for all components); (2) assigns the entropic component due solely to fluctuations in individual Hamiltonian terms to the corresponding free energy component; and (3) evenly splits the entropic coupling terms between the corresponding free energies.
-
 %%%%%%%%
 %%%%%%%%
 \subsection{Cumulant expansion of the free energy decomposition}
