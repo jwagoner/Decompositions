@@ -51,7 +51,7 @@ def cancelBradyDerivatives(myC):
 def main():
 
 	nC = 3 # number of components
-	nOrders = 4 # number of cumulant orders to test
+	nOrders = 7 # number of cumulant orders to test
 	myC = cb.Cumulants(nC,nOrders)
 
 	cancelBradyDerivatives(myC)
